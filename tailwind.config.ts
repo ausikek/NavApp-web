@@ -59,6 +59,7 @@ const config: Config = {
       },
       fontFamily: {
         VT323: ["VT323"],
+        IBM: ["IBM Plex Serif"],
       },
     },
   },

@@ -47,7 +47,7 @@ export default function CreateAccount() {
         />
         <h1 className="font-VT323 text-7xl">Cadastrar</h1>
       </header>
-      <main className="flex flex-col items-center justify-center flex-grow">
+      <main className="flex flex-col items-center justify-center flex-grow font-IBM">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
