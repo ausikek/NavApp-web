@@ -1,25 +1,40 @@
 "use client";
 
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { IconInput } from "@/components/IconInput";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { userLoginSchema } from "@/DTOs";
 import { UserLogin } from "@/types";
-import { Logo } from "@/assets";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 export default function Login() {
-  const form = useForm<UserLogin>({ resolver: zodResolver(userLoginSchema) });
+  const form = useForm<UserLogin>({
+    resolver: zodResolver(userLoginSchema),
+    defaultValues: { username: "", password: "" },
+  });
 
   const onSubmit = (data: object) => {
     console.log(data);
   };
 
+  const [view, setView] = useState(false);
+
   return (
-    <div className="bg-background flex items-center justify-center min-h-screen">
-      <main className="flex">
+    <div className="min-h-screen flex flex-col">
+      <header>
+        <h1 className="font-VT323 pl-2 text-7xl">Entrar</h1>
+      </header>
+      <main className="flex flex-col items-center justify-center flex-grow">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -29,19 +44,6 @@ export default function Login() {
                 : "gap-9"
             } justify-center items-center`}
           >
-            <div className="flex flex-col justify-center items-center gap-1">
-              <Image
-                className=""
-                src={Logo}
-                alt="Company Logo"
-                width={180}
-                height={38}
-              />
-              {(form.formState.errors.username ||
-                form.formState.errors.password) && (
-                <span>Usuário ou Senha inválidos</span>
-              )}
-            </div>
             <div className="flex flex-col justify-center items-center gap-5">
               <FormField
                 control={form.control}
@@ -51,6 +53,7 @@ export default function Login() {
                     <FormControl>
                       <Input placeholder="Usuário" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -60,8 +63,16 @@ export default function Login() {
                 render={({ field }) => (
                   <FormItem className="min-w-full">
                     <FormControl>
-                      <Input placeholder="Senha" type="password" {...field} />
+                      <IconInput
+                        hover
+                        type={view ? "text" : "password"}
+                        icon={view ? Eye : EyeOff}
+                        iconOnClick={() => setView(!view)}
+                        placeholder="Senha"
+                        {...field}
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -78,7 +89,7 @@ export default function Login() {
               <div className="flex flex-col gap-3">
                 <hr />
                 <a href="/create-new-account">
-                  Ainda não possui conta? Clique aqui!
+                  Ainda não possui conta? <b>Clique aqui!</b>
                 </a>
               </div>
             </div>
