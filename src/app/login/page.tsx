@@ -34,7 +34,7 @@ export default function Login() {
       <header>
         <h1 className="font-VT323 pl-2 text-7xl">Entrar</h1>
       </header>
-      <main className="flex flex-col items-center justify-center flex-grow">
+      <main className="flex flex-col items-center justify-center flex-grow font-IBM">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
