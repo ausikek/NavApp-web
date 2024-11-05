@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AxiosError, AxiosResponse } from "axios";
 import api from "@/services/api";
 
-interface UseAxiosProps {
+export interface UseAxiosProps {
   url: string;
   method: "get" | "post" | "put" | "delete";
   body?: object;

@@ -1,5 +1,6 @@
 "use client";
 
+import api from "@/services/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { userRegistrationSchema } from "@/DTOs";
@@ -17,24 +19,43 @@ import { UserRegistration } from "@/types";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 export default function CreateAccount() {
   const form = useForm<UserRegistration>({
     resolver: zodResolver(userRegistrationSchema),
     defaultValues: {
       email: "",
-      username: "",
+      name: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit = (data: object) => {
-    console.log(data);
-  };
-
   const [view, setView] = useState(false);
   const [viewConfirm, setViewConfirm] = useState(false);
+  const [creationError, setCreationError] = useState(false);
+
+  const handleSubmit = (data: UserRegistration) => {
+    api
+      .post("/users", {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      })
+      .then(() => {
+        router.push("/login");
+      })
+      .catch((error: AxiosError) => {
+        if (error.status === 400) {
+          setCreationError(true);
+        } else if (error.status === 500) {
+          setCreationError(true);
+        } else {
+          console.log(error.status);
+        }
+      });
+  };
 
   const router = useRouter();
 
@@ -48,23 +69,22 @@ export default function CreateAccount() {
         <h1 className="font-VT323 text-7xl">Cadastrar</h1>
       </header>
       <main className="flex flex-col items-center justify-center flex-grow font-IBM">
+        {creationError && (
+          <p className="text-red-500 text-sm mb-3">
+            O email já está cadastrado
+          </p>
+        )}
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className={`flex flex-col ${
-              form.formState.errors.username || form.formState.errors.password
-                ? "gap-2"
-                : "gap-9"
-            } justify-center items-center`}
-          >
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
             <div className="flex flex-col justify-center items-center gap-5">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem className="min-w-full">
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="E-mail" {...field} />
+                      <Input placeholder="Insira seu e-mail" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -72,11 +92,12 @@ export default function CreateAccount() {
               />
               <FormField
                 control={form.control}
-                name="username"
+                name="name"
                 render={({ field }) => (
                   <FormItem className="min-w-full">
+                    <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input placeholder="Usuário" {...field} />
+                      <Input placeholder="Insira seu usuário" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -87,13 +108,14 @@ export default function CreateAccount() {
                 name="password"
                 render={({ field }) => (
                   <FormItem className="min-w-full">
+                    <FormLabel>Senha</FormLabel>
                     <FormControl>
                       <IconInput
                         hover
                         type={view ? "text" : "password"}
                         icon={view ? Eye : EyeOff}
                         iconOnClick={() => setView(!view)}
-                        placeholder="Senha"
+                        placeholder="Insira sua senha"
                         {...field}
                       />
                     </FormControl>
@@ -106,6 +128,7 @@ export default function CreateAccount() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem className="min-w-full">
+                    <FormLabel>Confirme sua senha</FormLabel>
                     <FormControl>
                       <IconInput
                         hover

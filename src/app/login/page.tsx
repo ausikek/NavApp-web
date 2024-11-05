@@ -20,7 +20,7 @@ import { useState } from "react";
 export default function Login() {
   const form = useForm<UserLogin>({
     resolver: zodResolver(userLoginSchema),
-    defaultValues: { username: "", password: "" },
+    defaultValues: { email: "", password: "" },
   });
 
   const onSubmit = (data: object) => {
@@ -39,7 +39,7 @@ export default function Login() {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className={`flex flex-col ${
-              form.formState.errors.username || form.formState.errors.password
+              form.formState.errors.email || form.formState.errors.password
                 ? "gap-2"
                 : "gap-9"
             } justify-center items-center`}
@@ -47,11 +47,11 @@ export default function Login() {
             <div className="flex flex-col justify-center items-center gap-5">
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem className="min-w-full">
                     <FormControl>
-                      <Input placeholder="Usuário" {...field} />
+                      <Input placeholder="E-mail" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
